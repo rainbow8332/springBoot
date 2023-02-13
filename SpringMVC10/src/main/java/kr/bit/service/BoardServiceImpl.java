@@ -40,4 +40,10 @@ public class BoardServiceImpl implements BoardService{
 		
 	}
 
+	@Override
+	public void update(Board vo) {
+		 boardRepository.save(vo); // insert,update
+		
+	}
+
 }

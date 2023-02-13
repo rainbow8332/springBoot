@@ -53,4 +53,11 @@ public class BoardController {
 		return "redirect:list";
 	}
 	
+	// 수정
+	@PostMapping("/modify")
+	public String modify(Board vo) {
+		boardService.update(vo);
+		return "redirect:/list";
+	}
+	
 }

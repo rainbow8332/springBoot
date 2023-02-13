@@ -10,5 +10,6 @@ public interface BoardService {
 	public void register(Board vo); // 글등록
 	public Board get(Long idx); // 상세
 	public void delete(Long idx); // 삭제
+	public void update(Board vo); // 수정 
 
 }

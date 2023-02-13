@@ -29,6 +29,11 @@
   			}else if(oper=='remove'){
   				var idx=regForm.find("#idx").val();
   				location.href="${cpath}/remove?idx="+idx;
+  			}else if(oper=='updateForm'){
+  				regForm.find("#title").attr("readonly",false);
+  				regForm.find("#content").attr("readonly",false);
+  				var upBtn="<button type='button' onclick='goUpdate()' class='btn btn-sm btn-info'>수정완료</button>";
+  				$("#update").html(upBtn)
   			}
   		});
   		// a tag 클릭시 상세보기 
@@ -56,7 +61,11 @@
   		$("#regDiv").css("display","none");
   		$("#updateDiv").css("display","block");
   	}
-  	
+  	function goUpdate(){
+  		var regForm=$("#regForm");
+  		regForm.attr("action","${cpath}/modify");
+  		regForm.submit();
+  	}
   </script>
 </head>
 <body>
@@ -139,7 +148,7 @@
                   				</div> 
                   				<div id="updateDiv" style="display: none">
 	                  				<button type="button" data-oper="list" class="btn btn-sm btn-primary">목록</button>
-	                  				<button type="button" data-oper="updateForm" class="btn btn-sm btn-warning">수정</button>
+	                  				<span id="update"><button type="button" data-oper="updateForm" class="btn btn-sm btn-warning">수정</button></span>
 	                  				<button type="button" data-oper="remove" class="btn btn-sm btn-success">삭제</button>
                   				</div>
     						</form>
