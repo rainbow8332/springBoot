@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.bit.entity.Board;
 import kr.bit.service.BoardService;
@@ -18,6 +19,7 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 	
+	// 리스트 
 	@RequestMapping("/list")
 	public String list(Model model) {
 		List<Board> list = boardService.getList();
@@ -25,15 +27,30 @@ public class BoardController {
 		return "list"; // WEB-INF/board/list.jsp
 	}
 
+	// 등록화면 
 	@GetMapping("/register")
 	public String register() {
 		return "register"; // WEB-INF/board/register.jsp
 	}
 	
+	// 등록 
 	@PostMapping("/register")
 	public String register(Board vo) {
 		boardService.register(vo);
 		return "redirect:/list";
+	}
+	
+	@GetMapping("/get")
+	public @ResponseBody Board get(Long idx) {
+		Board vo = boardService.get(idx);
+		return vo;
+	}
+	
+	// 삭제
+	@GetMapping("/remove")
+	public String remove(Long idx) {
+		boardService.delete(idx); // 삭제성공
+		return "redirect:list";
 	}
 	
 }

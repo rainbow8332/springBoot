@@ -11,9 +11,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript">
   	$(document).ready(function(){
   		var regForm=$("#regForm");
@@ -21,11 +22,41 @@
   			var oper=$(this).data("oper");
   			if(oper=='register'){
   				regForm.submit();
-  			}else if(oper=='reset')
+  			}else if(oper=='reset'){
   				regForm[0].reset();
-  		})
+  			}else if(oper=='list'){
+  				location.href="${cpath}/list";
+  			}else if(oper=='remove'){
+  				var idx=regForm.find("#idx").val();
+  				location.href="${cpath}/remove?idx="+idx;
+  			}
+  		});
+  		// a tag 클릭시 상세보기 
+  		$("a").on("click",function(e){
+  			e.preventDefault();
+  			var idx=$(this).attr("href");
+  			$.ajax({
+  				url : "${cpath}/get",
+  				type : "get",
+  				data : {"idx":idx},
+  				dataType : "json",
+  				success : printBoard,
+  				error : function(){alert("error");}
+  			});
+  		});
   	});
-  
+  	function printBoard(vo){
+  		var regForm=$("#regForm");
+  		regForm.find("#title").val(vo.title);
+  		regForm.find("#content").val(vo.content);
+  		regForm.find("#writer").val(vo.writer);
+  		regForm.find("#idx").val(vo.idx);
+  		regForm.find("input").attr("readonly",true);
+  		regForm.find("textarea").attr("readonly",true);
+  		$("#regDiv").css("display","none");
+  		$("#updateDiv").css("display","block");
+  	}
+  	
   </script>
 </head>
 <body>
@@ -76,7 +107,7 @@
     								<c:forEach var="vo" items="${list}">
     									<tr>
     										<td>${vo.idx}</td>
-    										<td>${vo.title}</td>
+    										<td><a href="${vo.idx}">${vo.title}</a></td>
     										<td><fmt:formatDate pattern="yyyy-MM-dd" value="${vo.indate}"/></td>
     									</tr>
     								</c:forEach>
@@ -89,6 +120,7 @@
     				<div class="card" style="min-height: 500px; max-height: 1000px">
     					<div class="card-body">
     						<form id="regForm" action="${cpath}/register" method="post">
+    						<input type="hidden" id="idx" name="idx" value="${vo.idx}"/>
     							<div class="form-group">
     								<label for="memId">제목</label>
     								<input type="text" class="form-control" id="title" name="title" placeholder="Enter title"/>
@@ -101,8 +133,15 @@
     								<label for="writer">작성자</label>
     								<input type="text" class="form-control" id="writer" name="writer" placeholder="Enter writer"/>
     							</div>
-    							<button type="button" data-oper="register" class="btn btn-sm btn-primary">등록</button>
-                  				<button type="button" data-oper="reset" class="btn btn-sm btn-warning">취소</button> 
+    							<div id="regDiv">
+	    							<button type="button" data-oper="register" class="btn btn-sm btn-primary">등록</button>
+	                  				<button type="button" data-oper="reset" class="btn btn-sm btn-warning">취소</button>
+                  				</div> 
+                  				<div id="updateDiv" style="display: none">
+	                  				<button type="button" data-oper="list" class="btn btn-sm btn-primary">목록</button>
+	                  				<button type="button" data-oper="updateForm" class="btn btn-sm btn-warning">수정</button>
+	                  				<button type="button" data-oper="remove" class="btn btn-sm btn-success">삭제</button>
+                  				</div>
     						</form>
     					</div>
     				</div>
