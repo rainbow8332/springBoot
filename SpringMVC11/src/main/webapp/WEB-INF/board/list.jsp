@@ -20,6 +20,11 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript">
   	$(document).ready(function(){
+  		console.log('${user}');
+  		console.log('${user.member}');
+  		console.log('${user.member.username}');
+  		console.log('${user.username}');
+  		console.log('${auth[0]}');
   		var regForm=$("#regForm");
   		$("button").on("click", function(e){
   			var oper=$(this).data("oper");
@@ -62,6 +67,15 @@
   		regForm.find("input").attr("readonly",true);
   		regForm.find("textarea").attr("readonly",true);
   		$("#regDiv").css("display","none");
+  		
+  		if('${user.username}'!=vo.writer){
+  			$("button[data-oper='updateForm']").attr("disabled",true);
+  			$("button[data-oper='remove']").attr("disabled",true);
+  		}
+  		if('${user.username}'==vo.writer){
+  			$("button[data-oper='updateForm']").attr("disabled",false);
+  			$("button[data-oper='remove']").attr("disabled",false);
+  		}
   		$("#updateDiv").css("display","block");
   	}
   	function goUpdate(){
